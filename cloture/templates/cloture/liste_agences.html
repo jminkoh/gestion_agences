@@ -1,0 +1,286 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Liste des Agences</title>
+    <link
+      rel="shortcut icon"
+      href="{% static 'images/finance.ico' %}"
+      type="image/x-icon"
+    />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .top-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="top-buttons my-4">
+        <h1>Liste des Agences</h1>
+        <button type="button" class="btn btn-info" id="saveReport">
+          Sauvegarder Fiche
+        </button>
+      </div>
+
+      <!-- Formulaire pour la date et les heures -->
+      <form class="form-inline mb-4" method="post" id="timeForm">
+        {% csrf_token %}
+        <div class="form-group mr-3">
+          <label for="date" class="mr-2">Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="date"
+            value="{{ today }}"
+            disabled
+            Assurez-vous
+            que
+            la
+            date
+            est
+            passée
+            depuis
+            la
+            vue
+            --
+          />
+        </div>
+        <div class="form-group mr-3">
+          <label for="heure_debut" class="mr-2">Heure de Début:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="heure_debut"
+            name="heure_debut"
+            value="{{ heure_debut }}"
+          />
+        </div>
+        <div class="form-group mr-3">
+          <label for="heure_fin" class="mr-2">Heure de Fin:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="heure_fin"
+            name="heure_fin"
+            value="{{ heure_fin }}"
+          />
+        </div>
+        <button type="submit" class="btn btn-success">Sauvegarder</button>
+      </form>
+
+      <div class="table-responsive" id="tableContainer">
+        <table class="table table-bordered table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th>Nom</th>
+              <th>Comptabilisation</th>
+              <th>Demande de Mise à Jour</th>
+              <th>Pièce Déséquilibrée</th>
+              <th>Différence Opérationnelle & Comptabilité</th>
+              <th>Balance Équilibrée</th>
+              <th>Journée Fermée</th>
+              <th>Observation</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for agence in agences %}
+            <tr>
+              <td>{{ agence.nom }}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.comptabilisation
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.demande_mise_a_jour
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.piece_desequilibre
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.difference_operationnelle_comptabilite
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.balance_equilibree
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  {%
+                  if
+                  agence.journee_fermee
+                  %}checked{%
+                  endif
+                  %}
+                />
+              </td>
+              <td>
+                <textarea class="form-control" rows="3">
+{{ agence.observation }}</textarea
+                >
+              </td>
+              <td><a class="btn btn-primary">Modifier</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script>
+      // Script pour définir la date par défaut comme étant celle d'aujourd'hui
+      document.addEventListener("DOMContentLoaded", function () {
+        var today = new Date().toISOString().split("T")[0];
+        document.getElementById("date").value = today;
+
+        // Charger les heures sauvegardées
+        if (localStorage.getItem("heure_debut")) {
+          document.getElementById("heure_debut").value =
+            localStorage.getItem("heure_debut");
+        }
+        if (localStorage.getItem("heure_fin")) {
+          document.getElementById("heure_fin").value =
+            localStorage.getItem("heure_fin");
+        }
+      });
+
+      document
+        .getElementById("timeForm")
+        .addEventListener("submit", function () {
+          // Sauvegarder les heures dans le stockage local
+          localStorage.setItem(
+            "heure_debut",
+            document.getElementById("heure_debut").value
+          );
+          localStorage.setItem(
+            "heure_fin",
+            document.getElementById("heure_fin").value
+          );
+        });
+
+      document
+        .getElementById("saveReport")
+        .addEventListener("click", function () {
+          // Activer toutes les cases à cocher avant de générer le PDF
+          var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+          checkboxes.forEach(function (checkbox) {
+            checkbox.disabled = false;
+          });
+
+          html2canvas(document.getElementById("tableContainer"), {
+            scrollY: -window.scrollY,
+            scrollX: -window.scrollX,
+          })
+            .then((canvas) => {
+              var imgData = canvas.toDataURL("image/png");
+              const { jsPDF } = window.jspdf;
+              var doc = new jsPDF("p", "mm", "a4"); // Format A4 portrait en mm
+
+              var imgWidth = 190; // Largeur en mm pour une page A4
+              var pageHeight = 297; // Hauteur en mm pour une page A4
+              var imgHeight = (canvas.height * imgWidth) / canvas.width;
+              var heightLeft = imgHeight;
+
+              var position = 10;
+
+              // Ajouter la date et l'heure avant le tableau
+              var today = new Date();
+              var date = today.toLocaleDateString();
+              var time = today.toLocaleTimeString();
+
+              doc.setFontSize(12);
+              doc.text("Date: " + date, 10, position); // Afficher la date
+              position += 10; // Décaler vers le bas pour l'heure
+              doc.text("Heure: " + time, 10, position); // Afficher l'heure
+              position += 20; // Décaler avant le tableau
+
+              // Ajouter l'image du tableau (tableau à partir de html2canvas)
+              doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+
+              // Ajouter des pages si nécessaire pour le tableau
+              while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+              }
+
+              // Ajouter la section de signature après le tableau
+              position += imgHeight + 10; // Décaler sous le tableau
+              doc.text("Nom: _______________________________", 10, position);
+              position += 10;
+              doc.text("Signature: _________________________", 10, position);
+
+              // Sauvegarder le PDF
+              doc.save("tableau.pdf");
+
+              // Réactiver toutes les cases à cocher après la génération du PDF
+              checkboxes.forEach(function (checkbox) {
+                checkbox.disabled = false;
+              });
+            })
+            .catch((error) => {
+              console.error("Erreur lors de la génération du PDF:", error);
+
+              // Réactiver les cases à cocher en cas d'erreur
+              checkboxes.forEach(function (checkbox) {
+                checkbox.disabled = false;
+              });
+            });
+        });
+    </script>
+  </body>
+</html>
