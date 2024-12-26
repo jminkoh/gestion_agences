@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login 
 from django.contrib.auth.decorators import login_required
 from .models import Agence
-from .forms import AgenceForm, ConnexionForm, InscriptionForm
+from .forms import AgenceForm, ConnexionForm
 
 def login(request): 
     if request.method == 'POST':

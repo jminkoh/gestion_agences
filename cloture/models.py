@@ -3,10 +3,6 @@ from django.contrib.auth.models import AbstractUser
 
 class Agence(models.Model):
     nom = models.CharField(max_length=191) 
-    comptabilisation = models.BooleanField(default=False) 
-    demande_mise_a_jour = models.BooleanField(default=False) 
-    piece_desequilibre = models.BooleanField(default=False) 
-    difference_operationnelle_comptabilite = models.BooleanField(default=False) 
     balance_equilibree = models.BooleanField(default=False) 
     journee_fermee = models.BooleanField(default=False) 
     observation = models.TextField(blank=True, null=True) 
