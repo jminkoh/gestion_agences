@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import Agence
 from .forms import AgenceForm, ConnexionForm
+from datetime import date
 
 def login(request): 
     if request.method == 'POST':
@@ -30,6 +31,7 @@ def login(request):
 @login_required
 def liste_agences(request):
     agences = Agence.objects.all()
-    return render(request, 'cloture/liste_agences.html', {'agences': agences})
+    today = date.today().strftime('%Y-%m-%d')
+    return render(request, 'cloture/liste_agences.html', {'agences': agences, 'today': today})
 
 
