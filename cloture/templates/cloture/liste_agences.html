@@ -4,20 +4,17 @@
   <head>
     <title>Liste des Agences</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link
-      rel="shortcut icon"
-      href="{% static 'images/finance.ico' %}"
-      type="image/x-icon"
-    />
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link rel="shortcut icon" href="{% static 'images/finance.ico' %}" type="image/x-icon" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <style>
       .top-buttons {
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+      .disabled {
+        pointer-events: none;
+        opacity: 0.5;
       }
     </style>
   </head>
@@ -30,39 +27,19 @@
         </button>
       </div>
 
-      <!-- Formulaire pour la date et les heures -->
       <form class="form-inline mb-4" method="post" id="timeForm">
         {% csrf_token %}
         <div class="form-group mr-3">
           <label for="date" class="mr-2">Date:</label>
-          <input
-            type="date"
-            class="form-control"
-            id="date"
-            name="date"
-            value="{{ today }}"
-            disabled
-          />
+          <input type="date" class="form-control" id="date" name="date" value="{{ today }}" disabled />
         </div>
         <div class="form-group mr-3">
           <label for="heure_debut" class="mr-2">Heure de Début:</label>
-          <input
-            type="time"
-            class="form-control"
-            id="heure_debut"
-            name="heure_debut"
-            value="{{ heure_debut }}"
-          />
+          <input type="time" class="form-control" id="heure_debut" name="heure_debut" value="{{ heure_debut }}" />
         </div>
         <div class="form-group mr-3">
           <label for="heure_fin" class="mr-2">Heure de Fin:</label>
-          <input
-            type="time"
-            class="form-control"
-            id="heure_fin"
-            name="heure_fin"
-            value="{{ heure_fin }}"
-          />
+          <input type="time" class="form-control" id="heure_fin" name="heure_fin" value="{{ heure_fin }}" />
         </div>
         <button type="submit" class="btn btn-success">Sauvegarder</button>
       </form>
@@ -83,32 +60,20 @@
             <tr data-agence-id="{{ agence.id }}">
               <td>{{ agence.nom }}</td>
               <td>
-                <input
-                  type="checkbox"
-                  data-id="balance_{{ agence.id }}"
-                  {% if agence.balance_equilibree %}checked{% endif %}
-                />
+                <input type="checkbox" class="balance-checkbox" data-id="balance_{{ agence.id }}" />
               </td>
               <td>
-                <input
-                  type="checkbox"
-                  data-id="journee_{{ agence.id }}"
-                  {% if agence.journee_fermee %}checked{% endif %}
-                />
+                <input type="checkbox" class="journee-checkbox" data-id="journee_{{ agence.id }}"/>
               </td>
               <td>
-                <textarea class="form-control" rows="3" data-id="observation_{{ agence.id }}">
-                  {{ agence.observation }}
-                </textarea>
+                <textarea class="form-control observation" rows="3" data-id="observation_{{ agence.id }}">{{ agence.observation }}</textarea>
               </td>
-              <td><button class="btn btn-info cloturer-btn">Clôturer</button></td>
+              <td><button class="btn btn-info cloturer-btn" data-id="cloturer_{{ agence.id }}">Clôturer</button></td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
-
-    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
