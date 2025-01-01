@@ -1,33 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
-const form = document.getElementById('timeForm');
-const heureDebutInput = document.getElementById('heure_debut');
-const heureFinInput = document.getElementById('heure_fin');
+    const form = document.getElementById('timeForm');
+    const heureDebutInput = document.getElementById('heure_debut');
 
-// Charger les données sauvegardées depuis localStorage
-const savedHeureDebut = localStorage.getItem('heure_debut');
-const savedHeureFin = localStorage.getItem('heure_fin');
+    // Charger les données sauvegardées depuis localStorage
+    const savedHeureDebut = localStorage.getItem('heure_debut');
 
-if (savedHeureDebut) {
-    heureDebutInput.value = savedHeureDebut;
-}
+    if (savedHeureDebut) {
+      heureDebutInput.value = savedHeureDebut;
+    }
 
-if (savedHeureFin) {
-    heureFinInput.value = savedHeureFin;
-}
+    // Sauvegarder l'heure de début dans localStorage lors de la soumission du formulaire
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); // Empêcher le rechargement de la page
 
-// Sauvegarder les données dans localStorage lors de la soumission du formulaire
-form.addEventListener('submit', function (e) {
-    e.preventDefault(); // Empêcher le rechargement de la page
+      const heureDebut = heureDebutInput.value;
 
-    const heureDebut = heureDebutInput.value;
-    const heureFin = heureFinInput.value;
+      // Sauvegarder dans localStorage
+      localStorage.setItem('heure_debut', heureDebut);
 
-    // Sauvegarder dans localStorage
-    localStorage.setItem('heure_debut', heureDebut);
-    localStorage.setItem('heure_fin', heureFin);
-
-    alert('Heures sauvegardées avec succès !');
-});
+      alert('Heure de début sauvegardée avec succès !');
+    });
 });
 
 document.addEventListener('DOMContentLoaded', function () {
