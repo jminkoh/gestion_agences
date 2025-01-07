@@ -16,9 +16,42 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Heure de début sauvegardée avec succès !');
     });
 
+    // === Fonction pour mettre à jour les observations en fonction des checkboxes ===
+    const updateObservations = (row) => {
+        const balanceCheckbox = row.querySelector('.balance-checkbox');
+        const journeeCheckbox = row.querySelector('.journee-checkbox');
+        const observationTextarea = row.querySelector('.observation');
+
+        const isBalanceChecked = balanceCheckbox.checked;
+        const isJourneeChecked = journeeCheckbox.checked;
+
+        if (!isBalanceChecked && !isJourneeChecked) {
+            // Si aucun checkbox n'est coché
+            observationTextarea.value = `La colonne Balance Équilibrée et/ou Journée Fermée n'est pas renseignée.`;
+            observationTextarea.disabled = false;
+        } else if (isBalanceChecked && !isJourneeChecked) {
+            // Si Balance est coché, mais pas Journee
+            observationTextarea.value = `La colonne Balance Équilibrée est renseignée, mais la colonne Journée Fermée n'est pas renseignée.`;
+            observationTextarea.disabled = false;
+        } else if (!isBalanceChecked && isJourneeChecked) {
+            // Si Journée est coché, mais pas Balance
+            observationTextarea.value = `La colonne Journée Fermée est renseignée, mais la colonne Balance Équilibrée n'est pas renseignée.`;
+            observationTextarea.disabled = false;
+        } else if (isBalanceChecked && isJourneeChecked) {
+            // Si les deux checkboxes sont cochées
+            observationTextarea.value = "Agence clôturée";
+            observationTextarea.disabled = true;  // Griser le textarea
+        }
+    };
+
+    // === Vérification au chargement de la page ===
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        updateObservations(row);  // Mettre à jour le message dès le chargement
+    });
+
     // === Sauvegarder les données des checkboxes et textareas dans localStorage ===
     const saveFormState = () => {
-        const rows = document.querySelectorAll('tbody tr');
         const data = [];
 
         rows.forEach(row => {
@@ -60,23 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     loadFormState();
 
-    document.querySelectorAll('.balance-checkbox, .journee-checkbox, .observation').forEach(element => {
-        element.addEventListener('change', saveFormState);
-    });
+    // === Ajouter un événement pour chaque changement dans les checkboxes et textarea ===
+    document.querySelectorAll('.balance-checkbox, .journee-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const row = checkbox.closest('tr');
+            updateObservations(row);  // Mettre à jour immédiatement le message
 
-    // === Gestion du bouton "Clôturer" ===
-    document.querySelectorAll('.cloturer-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const row = button.closest('tr');
-            const balanceCheckbox = row.querySelector('.balance-checkbox');
-            const journeeCheckbox = row.querySelector('.journee-checkbox');
-
-            balanceCheckbox.checked = true;
-            journeeCheckbox.checked = true;
-            button.disabled = true;
-
-            saveFormState();
-            alert('Agence clôturée !');
+            saveFormState();  // Sauvegarder l'état du formulaire dans localStorage
         });
     });
 
@@ -100,13 +123,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const headers = table.querySelectorAll('thead th');
         const rows = table.querySelectorAll('tbody tr');
 
+        // Récupérer les en-têtes de colonnes
         headers.forEach(header => {
             tableHeaders.push(header.textContent.trim());
         });
 
+        // Récupérer les données des lignes
         rows.forEach(row => {
             const rowData = [];
             const cells = row.querySelectorAll('td');
+            const balanceCheckbox = row.querySelector('.balance-checkbox');
+            const journeeCheckbox = row.querySelector('.journee-checkbox');
+            const observationTextarea = row.querySelector('.observation');
+
+            const isBalanceChecked = balanceCheckbox.checked;
+            const isJourneeChecked = journeeCheckbox.checked;
 
             cells.forEach(cell => {
                 const checkbox = cell.querySelector('input[type="checkbox"]');
@@ -115,6 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (checkbox) {
                     rowData.push(checkbox.checked ? 'Oui' : 'Non');
                 } else if (textarea) {
+                    if (isBalanceChecked && isJourneeChecked) {
+                        textarea.value = "Agence clôturée";  // Si les deux checkboxes sont cochées
+                        textarea.disabled = true;  // Griser le textarea
+                    }
                     rowData.push(textarea.value.trim());
                 } else {
                     rowData.push(cell.textContent.trim());
