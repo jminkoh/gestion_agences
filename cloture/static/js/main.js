@@ -114,11 +114,9 @@ document.addEventListener('DOMContentLoaded', function () {
         doc.setFontSize(18);
         doc.text('Rapport des Agences', 40, 40);
     
-        // Récupérer l'heure de début et l'heure de génération
         const heureDebut = document.getElementById('heure_debut').value;
         const heureGeneration = new Date().toLocaleString();
     
-        // Ajouter l'heure de début et l'heure de génération en haut du PDF
         doc.setFontSize(10);
         doc.text(`Heure de Début: ${heureDebut}`, 40, 60);
         doc.text(`Heure de Génération: ${heureGeneration}`, 400, 60);
@@ -130,12 +128,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const headers = table.querySelectorAll('thead th');
         const rows = table.querySelectorAll('tbody tr');
     
-        // Récupérer les en-têtes de colonnes
         headers.forEach(header => {
             tableHeaders.push(header.textContent.trim());
         });
     
-        // Récupérer les données des lignes
         rows.forEach(row => {
             const rowData = [];
             const cells = row.querySelectorAll('td');
@@ -166,11 +162,10 @@ document.addEventListener('DOMContentLoaded', function () {
             tableRows.push(rowData);
         });
     
-        // Ajouter le tableau dans le PDF
         doc.autoTable({
             head: [tableHeaders],
             body: tableRows,
-            startY: 80, // Début du tableau
+            startY: 80,
             tableWidth: 'auto',
             margin: { left: 40, right: 40 },
             theme: 'grid',
@@ -198,13 +193,34 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         });
     
-        // Ajouter le champ "Nom" en bas du document
         doc.text('Nom: ____________________________', 40, doc.internal.pageSize.height - 40);
     
-        // Sauvegarder le PDF
-        doc.save('rapport_agences.pdf');
+        // Convertir le PDF en base64
+        const pdfBase64 = doc.output('datauristring');
+    
+        // Envoi du PDF au serveur via une requête POST
+        fetch('/save_report/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: JSON.stringify({
+                pdf: pdfBase64,
+                heure_debut: heureDebut,
+                heure_generation: heureGeneration,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Rapport enregistré avec succès!');
+            doc.save('rapport_agences.pdf'); // Sauvegarder localement également
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
     });
-
+    
     // === Sélectionner/Désélectionner toutes les checkboxes ===
     selectAllButton.addEventListener('click', () => {
         document.querySelectorAll('.balance-checkbox, .journee-checkbox').forEach(checkbox => {

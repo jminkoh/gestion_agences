@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulter les rapports</title>
+    <!-- Lien vers Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Consulter les rapports</h1>
+
+        <!-- Barre de recherche -->
+        <div class="form-group mt-4">
+            <label for="searchInput">Rechercher un rapport:</label>
+            <input type="text" class="form-control" id="searchInput" placeholder="Entrez un nom ou une date" />
+        </div>
+        
+        {% if rapports %}
+        <!-- Tableau des rapports PDF -->
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped" id="rapportTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nom du Rapport</th>
+                        <th>Date de génération</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rapport in rapports %}
+                    <tr>
+                        <td>{{ rapport.date }}</td>
+                        <td>
+                            {% if rapport.fichier_pdf %}
+                                <a href="{{ rapport.fichier_pdf.url }}" class="btn btn-sm btn-outline-primary" target="_blank">Télécharger</a>
+                            {% else %}
+                                <span>Aucun fichier PDF disponible</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ rapport.observations }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <!-- Message si aucun rapport n'est disponible -->
+        <div class="alert alert-warning mt-4" role="alert">
+            Aucun rapport disponible dans la base de données.
+        </div>
+        {% endif %}
+        
+        <!-- Bouton pour revenir à la liste des agences -->
+        <a href="{% url 'liste_agences' %}" class="btn btn-secondary mt-4">Revenir à la Liste des Agences</a>
+    </div>
+
+    <!-- Scripts Bootstrap et jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script de filtrage -->
+    <script>
+        // Fonction de filtrage
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var searchValue = this.value.toLowerCase();
+            var tableRows = document.querySelectorAll('#rapportTable tbody tr');
+            
+            tableRows.forEach(function(row) {
+                var cells = row.getElementsByTagName('td');
+                var matchFound = false;
+
+                // Vérifier chaque cellule de la ligne
+                for (var i = 0; i < cells.length; i++) {
+                    if (cells[i].textContent.toLowerCase().indexOf(searchValue) > -1) {
+                        matchFound = true;
+                        break; // Si une correspondance est trouvée, arrêter la recherche dans la ligne
+                    }
+                }
+
+                // Afficher ou masquer la ligne en fonction de la correspondance
+                row.style.display = matchFound ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
