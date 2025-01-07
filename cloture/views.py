@@ -5,6 +5,9 @@ from .models import Agence
 from .forms import AgenceForm, ConnexionForm
 from datetime import date
 
+def consulter_rapports(request):
+    pass
+
 def login(request): 
     if request.method == 'POST':
         form = ConnexionForm(data=request.POST)
