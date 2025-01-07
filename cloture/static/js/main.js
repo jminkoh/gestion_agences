@@ -23,24 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Gestion du clic sur les boutons "Clôturer"
-    document.querySelectorAll('.cloturer-btn').forEach(button => {
-      button.addEventListener('click', function () {
-        const row = button.closest('tr'); // Trouver la ligne associée au bouton
-        const balanceCheckbox = row.querySelector('.balance-checkbox');
-        const journeeCheckbox = row.querySelector('.journee-checkbox');
-
-        // Cocher les checkbox de la ligne
-        balanceCheckbox.checked = true;
-        journeeCheckbox.checked = true;
-
-        // Désactiver le bouton
-        button.disabled = true;
-
-        // Message de confirmation
-        alert('Agence clôturée !');
-      });
-    });
 
     // Optionnel : Gestion des changements dans les checkboxes
     document.querySelectorAll('.balance-checkbox, .journee-checkbox').forEach(checkbox => {
