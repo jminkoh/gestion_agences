@@ -104,28 +104,37 @@ document.addEventListener('DOMContentLoaded', function () {
     // === Génération du PDF ===
     saveReportButton.addEventListener('click', function () {
         const { jsPDF } = window.jspdf;
-
+    
         const doc = new jsPDF({
             orientation: 'landscape',
             unit: 'pt',
             format: 'A4',
         });
-
+    
         doc.setFontSize(18);
         doc.text('Rapport des Agences', 40, 40);
-
+    
+        // Récupérer l'heure de début et l'heure de génération
+        const heureDebut = document.getElementById('heure_debut').value;
+        const heureGeneration = new Date().toLocaleString();
+    
+        // Ajouter l'heure de début et l'heure de génération en haut du PDF
+        doc.setFontSize(10);
+        doc.text(`Heure de Début: ${heureDebut}`, 40, 60);
+        doc.text(`Heure de Génération: ${heureGeneration}`, 400, 60);
+    
         const tableRows = [];
         const tableHeaders = [];
-
+    
         const table = document.querySelector('table');
         const headers = table.querySelectorAll('thead th');
         const rows = table.querySelectorAll('tbody tr');
-
+    
         // Récupérer les en-têtes de colonnes
         headers.forEach(header => {
             tableHeaders.push(header.textContent.trim());
         });
-
+    
         // Récupérer les données des lignes
         rows.forEach(row => {
             const rowData = [];
@@ -133,14 +142,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const balanceCheckbox = row.querySelector('.balance-checkbox');
             const journeeCheckbox = row.querySelector('.journee-checkbox');
             const observationTextarea = row.querySelector('.observation');
-
+    
             const isBalanceChecked = balanceCheckbox.checked;
             const isJourneeChecked = journeeCheckbox.checked;
-
+    
             cells.forEach(cell => {
                 const checkbox = cell.querySelector('input[type="checkbox"]');
                 const textarea = cell.querySelector('textarea');
-
+    
                 if (checkbox) {
                     rowData.push(checkbox.checked ? 'Oui' : 'Non');
                 } else if (textarea) {
@@ -153,14 +162,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     rowData.push(cell.textContent.trim());
                 }
             });
-
+    
             tableRows.push(rowData);
         });
-
+    
+        // Ajouter le tableau dans le PDF
         doc.autoTable({
             head: [tableHeaders],
             body: tableRows,
-            startY: 60,
+            startY: 80, // Début du tableau
             tableWidth: 'auto',
             margin: { left: 40, right: 40 },
             theme: 'grid',
@@ -187,7 +197,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
             },
         });
-
+    
+        // Ajouter le champ "Nom" en bas du document
+        doc.text('Nom: ____________________________', 40, doc.internal.pageSize.height - 40);
+    
+        // Sauvegarder le PDF
         doc.save('rapport_agences.pdf');
     });
 
