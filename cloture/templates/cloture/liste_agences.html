@@ -1,46 +1,153 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Agences</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="shortcut icon" href="{% static 'images/finance.ico' %}" type="image/x-icon" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-      .top-buttons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .disabled {
-        pointer-events: none;
-        opacity: 0.5;
-      }
+      body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    padding: 40px; /* Augmenter l'espace autour de la page */
+  }
+  
+  .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px; /* Espacement au-dessus du conteneur */
+  }
+  
+  .top-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 20px; /* Espacement sous le titre */
+  }
+  
+  .btn {
+    font-size: 0.875rem;
+    padding: 8px 15px;
+    border-radius: 25px;
+    margin-left: 10px; /* Espacement entre les boutons */
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  .form-control {
+    font-size: 0.875rem;
+    margin-bottom: 15px; /* Espacement sous les champs de formulaire */
+  }
+  
+  .table-responsive {
+    margin-top: 30px;
+  }
+  
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 30px; /* Espacement sous le tableau */
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  
+  .thead-dark th {
+    background-color: #343a40;
+    color: white;
+  }
+  
+  .observation {
+    font-size: 0.875rem;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  .form-inline {
+    margin-bottom: 30px; /* Espacement sous le formulaire */
+  }
+  
+  .form-inline .form-group {
+    margin-right: 15px;
+  }
+  
+  .form-inline label {
+    font-size: 0.875rem;
+    margin-right: 5px;
+  }
+  
+  /* Espacement entre les lignes du tableau */
+  .table tbody tr {
+    margin-bottom: 10px;
+  }
+   
     </style>
   </head>
   <body>
     <div class="container-fluid">
-      <div class="top-buttons my-4">
+      <div class="top-buttons">
         <h1>Liste des Agences</h1>
-        <button type="button" class="btn btn-danger" id="saveReport">
-          Terminer l'assistance
-        </button>
+        <div>
+          <button type="button" class="btn btn-sm btn-outline-primary" id="selectAll">Tout cocher</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAll">Tout décocher</button>
+          <button type="button" class="btn btn-sm btn-danger" id="saveReport">
+            Terminer l'assistance
+          </button>
+        </div>
       </div>
 
-      <form class="form-inline mb-4" method="post" id="timeForm">
+      <form class="form-inline" method="post" id="timeForm">
         {% csrf_token %}
-        <div class="form-group mr-3">
-          <label for="date" class="mr-2">Date:</label>
+        <div class="form-group">
+          <label for="date">Date:</label>
           <input type="date" class="form-control" id="date" name="date" value="{{ today }}" disabled />
         </div>
-        <div class="form-group mr-3">
-          <label for="heure_debut" class="mr-2">Heure de Début:</label>
+        <div class="form-group">
+          <label for="heure_debut">Heure de Début:</label>
           <input type="time" class="form-control" id="heure_debut" name="heure_debut" value="{{ heure_debut }}" />
         </div>
-        <button type="submit" class="btn btn-success">Sauvegarder</button>
+        <button type="submit" class="btn btn-sm btn-outline-success">Sauvegarder</button>
       </form>
 
-      <div class="table-responsive" id="tableContainer">
+      <div class="table-responsive">
         <table class="table table-bordered table-striped">
           <thead class="thead-dark">
             <tr>
@@ -71,8 +178,5 @@
     </div>
 
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    
   </body>
 </html>

@@ -12,4 +12,12 @@ class Agence(models.Model):
 
     def __str__(self):
         return self.nom
+
+class RapportAgence(models.Model):
+    date = models.DateField()
+    fichier_pdf = models.FileField(upload_to='rapports/', null=True, blank=True)
+    observations = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Rapport du {self.date}"
     

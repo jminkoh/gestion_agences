@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('timeForm');
     const heureDebutInput = document.getElementById('heure_debut');
     const saveReportButton = document.getElementById('saveReport');
+    const selectAllButton = document.getElementById('selectAll');
+    const deselectAllButton = document.getElementById('deselectAll');
 
     // === Gestion de l'heure de début avec localStorage ===
     const savedHeureDebut = localStorage.getItem('heure_debut');
@@ -26,19 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const isJourneeChecked = journeeCheckbox.checked;
 
         if (!isBalanceChecked && !isJourneeChecked) {
-            // Si aucun checkbox n'est coché
             observationTextarea.value = `La colonne Balance Équilibrée et/ou Journée Fermée n'est pas renseignée.`;
             observationTextarea.disabled = false;
         } else if (isBalanceChecked && !isJourneeChecked) {
-            // Si Balance est coché, mais pas Journee
             observationTextarea.value = `La colonne Balance Équilibrée est renseignée, mais la colonne Journée Fermée n'est pas renseignée.`;
             observationTextarea.disabled = false;
         } else if (!isBalanceChecked && isJourneeChecked) {
-            // Si Journée est coché, mais pas Balance
             observationTextarea.value = `La colonne Journée Fermée est renseignée, mais la colonne Balance Équilibrée n'est pas renseignée.`;
             observationTextarea.disabled = false;
         } else if (isBalanceChecked && isJourneeChecked) {
-            // Si les deux checkboxes sont cochées
             observationTextarea.value = "Agence clôturée";
             observationTextarea.disabled = true;  // Griser le textarea
         }
@@ -191,5 +189,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         doc.save('rapport_agences.pdf');
+    });
+
+    // === Sélectionner/Désélectionner toutes les checkboxes ===
+    selectAllButton.addEventListener('click', () => {
+        document.querySelectorAll('.balance-checkbox, .journee-checkbox').forEach(checkbox => {
+            checkbox.checked = true;
+            const row = checkbox.closest('tr');
+            updateObservations(row);
+        });
+        saveFormState();  // Sauvegarder l'état du formulaire
+    });
+
+    deselectAllButton.addEventListener('click', () => {
+        document.querySelectorAll('.balance-checkbox, .journee-checkbox').forEach(checkbox => {
+            checkbox.checked = false;
+            const row = checkbox.closest('tr');
+            updateObservations(row);
+        });
+        saveFormState();  // Sauvegarder l'état du formulaire
     });
 });
