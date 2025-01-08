@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
-            body: JSON.stringify({
+            body: JSON.stringify({  
                 pdf: pdfBase64,
                 heure_debut: heureDebut,
                 heure_generation: heureGeneration,

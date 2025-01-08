@@ -11,114 +11,94 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
       body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7fc;
-    padding: 40px; /* Augmenter l'espace autour de la page */
-  }
-  
-  .container-fluid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 30px; /* Espacement au-dessus du conteneur */
-  }
-  
-  .top-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 20px; /* Espacement sous le titre */
-  }
-  
-  .btn {
-    font-size: 0.875rem;
-    padding: 8px 15px;
-    border-radius: 25px;
-    margin-left: 10px; /* Espacement entre les boutons */
-  }
-  
-  .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  
-  .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-  }
-  
-  .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
-  
-  .form-control {
-    font-size: 0.875rem;
-    margin-bottom: 15px; /* Espacement sous les champs de formulaire */
-  }
-  
-  .table-responsive {
-    margin-top: 30px;
-  }
-  
-  .table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 30px; /* Espacement sous le tableau */
-  }
-  
-  .table th,
-  .table td {
-    padding: 12px;
-    text-align: left;
-    vertical-align: middle;
-  }
-  
-  .thead-dark th {
-    background-color: #343a40;
-    color: white;
-  }
-  
-  .observation {
-    font-size: 0.875rem;
-  }
-  
-  textarea {
-    resize: vertical;
-  }
-  
-  .disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-  
-  .form-inline {
-    margin-bottom: 30px; /* Espacement sous le formulaire */
-  }
-  
-  .form-inline .form-group {
-    margin-right: 15px;
-  }
-  
-  .form-inline label {
-    font-size: 0.875rem;
-    margin-right: 5px;
-  }
-  
-  /* Espacement entre les lignes du tableau */
-  .table tbody tr {
-    margin-bottom: 10px;
-  }
-   
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7fc;
+        padding: 40px;
+      }
+      .container-fluid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+      }
+      .top-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .btn {
+        font-size: 0.875rem;
+        padding: 8px 15px;
+        border-radius: 25px;
+        margin-left: 10px;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+      }
+      .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+      }
+      .form-control {
+        font-size: 0.875rem;
+        margin-bottom: 15px;
+      }
+      .table-responsive {
+        margin-top: 30px;
+      }
+      .table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 30px;
+      }
+      .table th,
+      .table td {
+        padding: 12px;
+        text-align: left;
+        vertical-align: middle;
+      }
+      .thead-dark th {
+        background-color: #343a40;
+        color: white;
+      }
+      .observation,
+      .observation-simplex {
+        font-size: 0.875rem;
+      }
+      textarea {
+        resize: vertical;
+      }
+      .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      .form-inline {
+        margin-bottom: 30px;
+      }
+      .form-inline .form-group {
+        margin-right: 15px;
+      }
+      .form-inline label {
+        font-size: 0.875rem;
+        margin-right: 5px;
+      }
+      .table tbody tr {
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
@@ -155,6 +135,7 @@
               <th>Nom</th>
               <th>Balance Équilibrée</th>
               <th>Journée Fermée</th>
+              <th>Observation Simplex</th> 
               <th>Observation</th>
             </tr>
           </thead>
@@ -167,6 +148,9 @@
               </td>
               <td>
                 <input type="checkbox" class="journee-checkbox" data-id="journee_{{ agence.id }}"/>
+              </td>
+              <td>
+                <textarea class="form-control observation-simplex" rows="3" data-id="observation_simplex_{{ agence.id }}">{{ agence.observation_simplex }}</textarea>
               </td>
               <td>
                 <textarea class="form-control observation" rows="3" data-id="observation_{{ agence.id }}">{{ agence.observation }}</textarea>
