@@ -23,9 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const balanceCheckbox = row.querySelector(".balance-checkbox");
     const journeeCheckbox = row.querySelector(".journee-checkbox");
     const observationTextarea = row.querySelector(".observation");
-    const observationSimplexTextarea = row.querySelector(
-      ".observation-simplex"
-    ); // Sélectionner observation_simplex
 
     const isBalanceChecked = balanceCheckbox.checked;
     const isJourneeChecked = journeeCheckbox.checked;
@@ -45,8 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
       observationTextarea.disabled = true; // Griser le textarea
     }
 
-    // === Observation Simplex : Comportement normal sans condition ===
-    // Ici, aucune logique n'est appliquée, la saisie est juste conservée
+    // Observation Simplex : Pas de modification ici
+    // observationSimplexTextarea.value reste inchangé
   };
 
   // === Vérification au chargement de la page ===
@@ -93,14 +90,13 @@ document.addEventListener("DOMContentLoaded", function () {
           const observationTextarea = row.querySelector(".observation");
           const observationSimplexTextarea = row.querySelector(
             ".observation-simplex"
-          ); // Sélectionner observation_simplex
+          );
 
           balanceCheckbox.checked = item.balance;
           journeeCheckbox.checked = item.journee;
           observationTextarea.value = item.observation;
 
-          // === Observation Simplex : Initialisation ===
-          // Si observation_simplex est undefined, on la laisse vide
+          // === Observation Simplex ===
           observationSimplexTextarea.value =
             item.observation_simplex === undefined ||
             item.observation_simplex === null
@@ -111,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  loadFormState();
+  loadFormState(); // Charger l'état sauvegardé au démarrage
 
   // === Ajouter un événement pour chaque changement dans les checkboxes et textarea ===
   document
@@ -122,6 +118,15 @@ document.addEventListener("DOMContentLoaded", function () {
         updateObservations(row); // Mettre à jour immédiatement le message
 
         saveFormState(); // Sauvegarder l'état du formulaire dans localStorage
+      });
+    });
+
+  // Ajouter un événement pour chaque changement dans les champs textarea
+  document
+    .querySelectorAll(".observation, .observation-simplex")
+    .forEach((textarea) => {
+      textarea.addEventListener("input", function () {
+        saveFormState(); // Sauvegarder l'état du formulaire dans localStorage chaque fois qu'il y a une saisie
       });
     });
 
@@ -143,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     doc.setFontSize(10);
     doc.text(`Heure de Début: ${heureDebut}`, 40, 60);
-    doc.text(`Heure de Génération: ${heureGeneration}`, 400, 60);
+    doc.text(`Heure de Fin: ${heureGeneration}`, 400, 60);
 
     const tableRows = [];
     const tableHeaders = [];
@@ -219,12 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       },
     });
-
-    doc.text(
-      "Nom: ____________________________",
-      40,
-      doc.internal.pageSize.height - 40
-    );
 
     // Convertir le PDF en base64
     const pdfBase64 = doc.output("datauristring");
