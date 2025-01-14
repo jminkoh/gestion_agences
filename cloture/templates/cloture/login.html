@@ -16,7 +16,7 @@
   <body>
     <div class="container">
       <h1 class="my-4">Connexion</h1>
-      <form method="post" class="col-md-6" action="{% url 'user_login' %}">
+      <form method="post" class="col-md-6" action="{% url 'login' %}">
         {% csrf_token %} {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Connectez-vous</button>
       </form>
