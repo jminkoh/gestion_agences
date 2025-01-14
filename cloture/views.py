@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Agence, RapportAgence
 from .forms import AgenceForm, ConnexionForm
 from datetime import date
@@ -49,7 +49,7 @@ def save_report(request):
 
     return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
-def login(request): 
+def user_login(request): 
     if request.method == 'POST':
         form = ConnexionForm(data=request.POST)
         if form.is_valid():
@@ -72,7 +72,11 @@ def login(request):
         'form': form,
     })
 
-@login_required
+def is_not_admin(user):
+    return not user.is_staff  # Vérifie que l'utilisateur n'est pas un administrateur
+
+@login_required(login_url='user_login') 
+@user_passes_test(is_not_admin)  # Empêche les administrateurs d'accéder à la vue
 def liste_agences(request):
     agences = Agence.objects.all()
     today = date.today().strftime('%Y-%m-%d')
