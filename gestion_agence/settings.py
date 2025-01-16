@@ -138,6 +138,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+LOGIN_URL = 'accounts/login/'
+LOGIN_REDIRECT_URL = '/agences/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

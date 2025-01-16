@@ -10,6 +10,11 @@ from django.core.files.base import ContentFile
 import base64
 from datetime import datetime
 import json
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+
+def redirection(request):
+    return HttpResponseRedirect('/agences/') 
 
 def consulter_rapports(request):
     # Récupérer tous les rapports de la base de données
@@ -51,26 +56,16 @@ def save_report(request):
 
 def login(request): 
     if request.method == 'POST':
-        form = ConnexionForm(data=request.POST)
+        form = ConnexionForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                # Redirection vers la page souhaitée après connexion
-                next_url = request.GET.get('next', 'liste_agences')
-                return redirect(next_url)
-            else:
-                # Ajout d'un message d'erreur dans le formulaire
-                form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect")
+            # Récupération de l'utilisateur authentifié
+            user = form.get_user()
+            login(request, user)  # Connexion de l'utilisateur
+            return redirect('home')  # Redirige vers la page d'accueil ou une autre page
     else:
         form = ConnexionForm()
-    
-    return render(request, 'cloture/login.html', context={
-        'form': form,
-    })
+
+    return render(request, 'registration/login.html', {'form': form})
 
 @login_required
 def liste_agences(request):
