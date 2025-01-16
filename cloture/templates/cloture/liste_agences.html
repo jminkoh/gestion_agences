@@ -113,7 +113,7 @@
       <div class="top-buttons">
         <h1>Liste des Agences</h1>
         <div>
-          <button
+          <!-- <button
             type="button"
             class="btn btn-sm btn-outline-primary"
             id="selectAll"
@@ -126,7 +126,7 @@
             id="deselectAll"
           >
             Tout décocher
-          </button>
+          </button> -->
           <button type="button" class="btn btn-sm btn-danger" id="saveReport">
             Terminer l'assistance
           </button>
@@ -134,6 +134,13 @@
             href="{% url 'liste_rapports' %}"
             class="btn btn-sm btn-outline-info"
             >Consulter les rapports</a
+          >
+          <a
+            href="{% url 'logout' %}"
+            class="btn btn-sm btn-outline-danger"
+            id="logoutButton"
+            style="margin-left: 15px"
+            >Déconnexion</a
           >
         </div>
       </div>

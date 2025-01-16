@@ -12,9 +12,14 @@ from datetime import datetime
 import json
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
+from django.contrib.auth import logout
 
 def redirection(request):
     return HttpResponseRedirect('/agences/') 
+
+def logout(request):
+    logout(request) 
+    return redirect('login')
 
 def consulter_rapports(request):
     # Récupérer tous les rapports de la base de données
