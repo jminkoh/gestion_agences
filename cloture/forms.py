@@ -3,11 +3,10 @@ from .models import Agence
 
 from django.contrib.auth.forms import AuthenticationForm 
 
-from django.contrib.auth.forms import UserCreationForm
 
 class ConnexionForm(AuthenticationForm): 
-    username = forms.CharField(label="Nom d'utilisateur", widget=forms.TextInput(attrs={'class': 'form-c²ontrol'})) 
-    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(label="Nom d'utilisateur", widget=forms.TextInput()) 
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput())
 
 class AgenceForm(forms.ModelForm):
     class Meta:
