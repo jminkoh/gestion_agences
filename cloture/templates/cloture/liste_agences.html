@@ -14,7 +14,7 @@
     <style>
       body {
         font-family: "Arial", sans-serif;
-        background-color: #f4f7fc;
+        background-color: #575757de; /* Assombrir la page */
         padding: 40px;
       }
       .container-fluid {
@@ -101,27 +101,18 @@
       .table tbody tr {
         margin-bottom: 10px;
       }
+      strong {
+        color: #e81c1cbe;
+        text-decoration: underline;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
     </style>
   </head>
   <body>
     <div class="container-fluid">
       <div class="top-buttons">
-        <h1>Liste des Agences</h1>
         <div>
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-primary"
-            id="selectAll"
-          >
-            Tout cocher
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary"
-            id="deselectAll"
-          >
-            Tout décocher
-          </button>
           <button type="button" class="btn btn-sm btn-danger" id="saveReport">
             Terminer l'assistance
           </button>
@@ -138,34 +129,45 @@
             >Déconnexion</a
           >
         </div>
+
+        <div>
+          <span>Connecté en tant que : <strong>{{ user }}</strong></span>
+          <!-- Boutons et autres éléments -->
+        </div>
       </div>
 
-      <form class="form-inline" method="post" id="timeForm">
+      <form class="form d-flex align-items-center" method="post" id="timeForm">
         {% csrf_token %}
-        <div class="form-group">
-          <label for="date">Date:</label>
-          <input
-            type="date"
-            class="form-control"
-            id="date"
-            name="date"
-            value="{{ today }}"
-            disabled
-          />
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input
+              type="date"
+              class="form-control"
+              id="date"
+              name="date"
+              value="{{ today }}"
+              disabled
+            />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="heure_debut">Heure de Début:</label>
-          <input
-            type="time"
-            class="form-control"
-            id="heure_debut"
-            name="heure_debut"
-            value="{{ heure_debut }}"
-          />
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="heure_debut">Heure de Début:</label>
+            <input
+              type="time"
+              class="form-control"
+              id="heure_debut"
+              name="heure_debut"
+              value="{{ heure_debut }}"
+            />
+          </div>
         </div>
-        <button type="submit" class="btn btn-sm btn-outline-success">
-          Sauvegarder
-        </button>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-sm btn-outline-success">
+            Sauvegarder
+          </button>
+        </div>
       </form>
 
       <div class="table-responsive">
@@ -210,8 +212,8 @@
                   rows="3"
                   data-id="observation_{{ agence.id }}"
                 >
-{{ agence.observation }}</textarea
-                >
+                  {{ agence.observation }}
+                </textarea>
               </td>
             </tr>
             {% endfor %}

@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Agence, RapportAgence
-from .forms import AgenceForm, ConnexionForm
+from .forms import ConnexionForm
 from datetime import date
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
@@ -62,8 +62,9 @@ def login(request):
 
 @login_required
 def liste_agences(request):
+    user = request.user.username
     agences = Agence.objects.all()
     today = date.today().strftime('%Y-%m-%d')
-    return render(request, 'cloture/liste_agences.html', context={'agences': agences, 'today': today})
+    return render(request, 'cloture/liste_agences.html', context={'agences': agences, 'today': today, 'user': user})
 
 
