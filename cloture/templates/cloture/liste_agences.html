@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Liste des Agences</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
@@ -131,7 +132,10 @@
         </div>
 
         <div>
-          <span>Connecté en tant que : <strong>{{ user }}</strong></span>
+          <span
+            >Connecté en tant que :
+            <strong id="user_name">{{ user }}</strong></span
+          >
           <!-- Boutons et autres éléments -->
         </div>
       </div>
@@ -222,6 +226,6 @@
       </div>
     </div>
 
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}?v=1.0.0"></script>
   </body>
 </html>

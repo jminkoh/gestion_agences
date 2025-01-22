@@ -225,6 +225,20 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
 
+    // === Ajouter le nom de l'utilisateur connecté en bas du tableau ===
+    const userNameElement = document.getElementById("user_name");
+    const userName = userNameElement
+      ? userNameElement.textContent
+      : "Nom de l'utilisateur non trouvé"; // Récupérer le nom de l'utilisateur
+    const pageHeight = doc.internal.pageSize.height;
+    const marginBottom = 20; // Un petit espace avant le bas de la page
+
+    doc.setFontSize(12);
+    // Positionner le nom de l'utilisateur tout en bas et centré
+    const textWidth = doc.getTextWidth(userName);
+    const xPosition = (doc.internal.pageSize.width - textWidth) / 2; // Centrer le texte
+    doc.text(userName, xPosition, pageHeight - marginBottom); // Afficher le nom de l'utilisateur
+
     // Convertir le PDF en base64
     const pdfBase64 = doc.output("datauristring");
 
