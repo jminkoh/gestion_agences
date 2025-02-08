@@ -1,0 +1,4 @@
+Terminer l'assistance : Alerter que l'assistance est fini et réinitialiser tout le formulaire et incrémente la date 0%
+PDF: Ajouter l'observation 0%
+Date: ne plus modifier le jour après avoir clôturer la période 0%
+Système: Après la cloture de la période il génère les statistiques et l'histogramme de la période clôturer (statistiques journalière et périodique) 0%
